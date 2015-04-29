@@ -8,6 +8,6 @@ func hello(id string) string {
 }
 
 func main() {
-	reinet.Get("/:id([0-9]+)")
+	reinet.Get("/:id([0-9]+)", hello)
 	reinet.Run(":1234")
 }
