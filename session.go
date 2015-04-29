@@ -24,6 +24,7 @@ type Provider interface {
 	SessionRead(sid string) (Session, error)
 	SessionDestroy(sid string) error
 	SessionGC(maxLifeTime int64) 
+	SessionUpdate(sid string) error
 }
 
 type Session interface {
@@ -36,15 +37,15 @@ type Session interface {
 var provides map[string]Provider
 var pder Provider
 
-func init() {
+func initSession() {
 	provides = make(map[string]Provider)
 	pder = &DefaultProvider {
-		list: list.New()
+		list: list.New(),
 	}
 	AddProvider("default", pder)
 }
 
-func NewManager(provideName, cookiename string, maxLifeTime int64) (*Manager, error) {
+func NewManager(provideName, cookieName string, maxLifeTime int64) (*Manager, error) {
 	provider, ok := provides[provideName]
 	if !ok {
 		return nil, fmt.Errorf("session: unknown provide %q (forgotten import?)", provideName)
@@ -57,7 +58,7 @@ func NewManager(provideName, cookiename string, maxLifeTime int64) (*Manager, er
 }
 
 func AddProvider(providerName string, provider Provider) {
-	provides[provideName] = provider
+	provides[providerName] = provider
 }
 
 func (self *Manager) sessionID() string {
