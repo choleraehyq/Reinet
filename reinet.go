@@ -1,6 +1,8 @@
 package reinet
 
 import (
+	"reflect"
+	"html/template"
 	"regexp"
 	"net/http"
 )
@@ -94,4 +96,21 @@ func UseProvider(providerName string, provider Provider) {
 
 func SetExpires(expires int64) {
 	Sessions.maxLifeTime = expires
+}
+
+func RenderTemplate(ctx Context, tmpl string, params interface{}) {
+	t, err := template.ParseFiles(tmpl)
+	if err != nil {
+		http.Error(ctx.res, err.Error(), http.StatusInternalServerError)
+		return 
+	}
+	err := t.Execute(ctx.res, params)
+	if err != nil {
+		http.Error(ctx.res, err.Error(), http.StatusInternalServerError)
+		return 
+	}
+}
+
+func Redirect(ctx Context, redirectUrl string) {
+	http.Redirect(ctx.res, ctx.req, redirectUrl, http.StatusFound)
 }
