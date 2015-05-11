@@ -2,9 +2,9 @@
 一个使用Golang编写的极简的Web框架,我编写此框架出于学习目的,未来我将不断维护它并加入新的功能.
 
 ##概况
-Reinet借鉴了[web.go](https://github.com/hoisie/web)和[beego](https://github.com/astaxie/beego),没有为用户提供脚手架,同时API的设计也与web.go类似.目前Reinet支持以下特性:
+Reinet借鉴了[martini](https://github.com/go-martini/martini), [web.go](https://github.com/hoisie/web)和[beego](https://github.com/astaxie/beego),没有为用户提供脚手架,同时API的设计也与web.go类似.目前Reinet支持以下特性:
 * 使用正则表达式以及带有参数的URL的路由分发
-* 静态文件的服务
+* 静态文件服务
 * 基本的会话管理
 
 ##安装
@@ -78,13 +78,23 @@ type Session interface {
 
 会话过期会被删除,目前默认的过期时间为3600秒.
 
+支持添加请求前与请求后中间件函数
+```
+func BeforeRequest(mid handler)
+func afterRequest(mid handler)
+```
+添加的函数必须无返回值，参数是无或一个Context类型函数．
+
+支持使用Golang自带的模板：
+```
+func RenderTemplate(ctx Context, tmpl string, params interface{})
+```
+
 目前版本的API尚不稳定,未来会开放更多API,并进一步支持用户定制和拓展.
 
 ##TODO
 * 安全性有待加强,比如预防Session劫持,安全的cookie等
-* 目前版本的代码已经考虑到了拓展性和定制性的要求,下一步需要设计并开放相关API
 * ORM(MySQL,MongoDB)
-* 模板的支持
 
 ##LICENSE
 本项目基于MIT许可证开源

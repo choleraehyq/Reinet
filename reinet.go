@@ -94,7 +94,7 @@ func UseProvider(providerName string, provider Provider) {
 	Sessions.provider = provides[providerName]
 }
 
-func SetExpires(expires int64) {
+func SetSessionExpires(expires int64) {
 	Sessions.maxLifeTime = expires
 }
 
@@ -113,4 +113,12 @@ func RenderTemplate(ctx Context, tmpl string, params interface{}) {
 
 func Redirect(ctx Context, redirectUrl string) {
 	http.Redirect(ctx.res, ctx.req, redirectUrl, http.StatusFound)
+}
+
+func BeforeRequest(mid handler) {
+	mainServer.addBefore(mid)
+}
+
+func afterRequest(mid handler) {
+	mainServer.addAfter(mid)
 }
